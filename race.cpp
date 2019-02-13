@@ -1,18 +1,21 @@
  /*
-        Author    :   Rajendra Singh
-        RollNo.   :   111601017
-        Topic     :   Parallel program for hare and turtle race.
-        Logic     :     
-                        > Created four thread for god, hare, turtle, reporter.
-                        > These thread are runing in below order using 3 flag variables.
-                                a) god
-                                b) hare or turtle
-                                c) reporter
-                        > In each iteration turtle updates its position by 1.
-                        > In each iteration hare updates its position by 2,3,4,5. Also if
-                            hare is way ahead of turtle then hare sleep(i.e updates its position by 0)
-                        > When the race is finished(i.e either of them reached finish position), then we 
-                          end each of thread. And display result.
+        Author              :   Rajendra Singh
+        RollNo.             :   111601017
+        Topic               :   Parallel program for hare and turtle race.
+        Logic               :     
+                                > Created four thread for god, hare, turtle, reporter.
+                                > These thread are runing in below order using 3 flag variables.
+                                        a) god
+                                        b) hare or turtle
+                                        c) reporter
+                                > In each iteration turtle updates its position by 1.
+                                > In each iteration hare updates its position by 2,3,4,5. Also if
+                                    hare is way ahead of turtle then hare sleep(i.e updates its position by 0)
+                                > When the race is finished(i.e either of them reached finish position), then we 
+                                end each of thread. And display result.
+
+        Version Controller  :  Look below repository for all version of code:-
+                               https://github.com/iamrajee/Parallel-programming.git
                         
 */
 
