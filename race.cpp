@@ -1,25 +1,3 @@
- /*
-        Author              :   Rajendra Singh
-        RollNo.             :   111601017
-        Topic               :   Parallel program for hare and turtle race.
-        Logic               :     
-                                > Created four thread for god, hare, turtle, reporter.
-                                > These thread are runing in below order using 3 flag variables.
-                                        a) god
-                                        b) hare or turtle
-                                        c) reporter
-                                > In each iteration turtle updates its position by 1.
-                                > In each iteration hare updates its position by 2,3,4,5. Also if
-                                    hare is way ahead of turtle then hare sleep(i.e updates its position by 0)
-                                > When the race is finished(i.e either of them reached finish position), then we 
-                                end each of thread. And display result.
-
-        Version Controller  :  Look below repository for all version of code:-
-                               https://github.com/iamrajee/Parallel-programming.git
-                        
-*/
-
-
 /*============================================== INCLUDING LIBRARIES ====================================*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,22 +6,19 @@
 #include<unistd.h>
 #include <iostream>
 #include <string>
-
 using namespace std;
 
 
-clock_t tStart = clock(); //starting clock
+clock_t tStart = clock();
 /*============================================== GLOBAL VARIABLES =======================================*/
 int turtle=0;                                             //variable to store distance covered by turtle
 int hare=0;                                               //variable to store distance covered by hare
-int finish=1000;                                          //variable to store finish line distance
-
-int god_flag = 0;                                         //flag to remember if god called(flag = 1) or not(flag = 0) in a each iteration
-int hare_flag = 0;                                       //flag to remember if hare stepped(flag = 1) or not(flag = 0) in a each iteration
-int turtle_flag = 0;                                     //flag to remember if turtle stepped(flag = 1) or not(flag = 0) in a each iteration
-
+int finish=1000;                                           //variable to store finish line distance
+int flag = 0;                                             //variable to maintain the order in which all function run
 /*============================================== MUTEX VARIABLES =======================================*/
-pthread_mutex_t lock;                                //mutex lock for shared variable
+pthread_mutex_t lock_hare;                                //mutex lock for hare variable
+pthread_mutex_t lock_turtle;                              //mutex lock for turtle variable
+pthread_mutex_t lock_flag;                                //mutex lock for flag variable
 
 /*============================================== FUNCTION DECLARATIONS =================================*/
 void *god_function(void*);                                 //function to randomly chose hare and turtle position
@@ -88,9 +63,8 @@ int main()
 
 
     /*Printing Results*/
-    cout << "\033[1;30m"<<"\n\n***************  Race ends, Hare: "<< hare<<", Turtle: "<<turtle<<"  *******************\n\n"<<"\033[0m";
-
-
+    // printf("\n\n***************Race ends, Hare: %d, Turtle: %d*******************\n\n", hare,turtle);
+    cout << "\033[1;30m"<<"\n\n***************  Race ends, Hare: "<< hare<<", Turtle: "<<turtle<<"  *******************\n\n"<<"\033[0m\n";
     if (hare>turtle){
         cout << "\033[1;4;31m"<<"\t\tHare Wins!!!\n\n"<<"\033[0m\n";
     }
@@ -101,8 +75,7 @@ int main()
         cout << "\033[1;4;31m"<<"\t\tRace Ties!!!\n\n"<<"\033[0m\n";
     }
     
-    /*Printing execution time*/
-    cout << "\033[1;32m"<<"Execution time: "<< (double)(clock() - tStart)/CLOCKS_PER_SEC<<" s"<<"\033[0m\n"<<endl;
+    cout << "\033[1;32m"<<"Execution time: "<< (double)(clock() - tStart)/CLOCKS_PER_SEC<<"\033[0m\n"<<endl;
      exit(EXIT_SUCCESS);
 }
 
@@ -110,14 +83,23 @@ int main()
 void *god_function(void* argv)
 {
     while(hare < finish && turtle < finish){            //condition of ending race, i.e one of them wins!
-        if(god_flag !=0) continue;                      //skip all if not god_flag = 0
+        
+        if(flag !=0) continue;
 
-        if((hare < finish && turtle < finish)!=1)   break;
-        pthread_mutex_lock(&lock);
+        pthread_mutex_lock(&lock_hare);                 //lock hare variable
         hare = rand()%finish + 1;                       //randomly placing hare in (1,fininsh)
+        pthread_mutex_unlock(&lock_hare);               //unlock hare variable
+
+        pthread_mutex_lock(&lock_turtle);
         turtle = rand()%finish + 1;                       //randomly placing turtle in (1,fininsh)
-        god_flag = 1;                                      //seting god_flag = 1, to tell that god is called
-        pthread_mutex_unlock(&lock);
+        pthread_mutex_unlock(&lock_turtle);
+
+        printf("\ngod_called\t");
+
+        pthread_mutex_lock(&lock_flag);
+        flag = 1;                                      //seting flag = 1, to tell hare that god is called
+        pthread_mutex_unlock(&lock_flag);
+
     }
     return NULL;
 }
@@ -128,18 +110,18 @@ void *hare_function(void* argv)
     
     while(hare < finish  && turtle < finish){
    
-        if(god_flag !=1 || hare_flag !=0) continue;                      //skip all if not god_flag = 1 and hare_flag = 0
+        // if(flag !=1) continue;
 
-        // if((hare < finish && turtle < finish)!=1)   break;
-        pthread_mutex_lock(&lock);
-        if (hare - turtle>finish/2) {
-            hare = hare;                               //hare sleeps if hare is more than finish/2 ahead of turtle
-        }
-        else{
-            hare = hare+rand()%4 + 2;                                    //incrementing hare position by 2,3,4,5 randomly
-        }
-        hare_flag = 1;                                       //seting hare_flag = 1, to tell that hare is called
-        pthread_mutex_unlock(&lock);
+        pthread_mutex_lock(&lock_hare); 
+        hare_temp = hare+rand()%4 + 2;                                    //incrementing hare position by 2,3,4,5 randomly
+        pthread_mutex_unlock(&lock_hare);
+
+        printf("hare_called\t");
+
+        pthread_mutex_lock(&lock_flag);
+        flag = 3;                                      //seting flag = 2, to tell turtle that hare is called
+        pthread_mutex_unlock(&lock_flag);
+
     }
     return NULL;
 }
@@ -148,13 +130,20 @@ void *hare_function(void* argv)
 void *turtle_function(void* argv)
 {
     while(hare < finish  && turtle < finish){
-        if(god_flag !=1 || turtle_flag !=0) continue;                      //skip all if not god_flag = 1 and turtle_flag = 0
+   
+        // if(flag !=1) continue;
 
-        // if((hare < finish && turtle < finish)!=1)   break;
-        pthread_mutex_lock(&lock);
-        turtle = turtle+1;                                        //incrementing turtle position by 1
-        turtle_flag = 1;                                      //seting turtle_flag = 1, to tell that turtle is called
-        pthread_mutex_unlock(&lock);
+        pthread_mutex_lock(&lock_hare); 
+        turtle+=1;                                        //incrementing turtle position by 1
+        pthread_mutex_unlock(&lock_hare);
+
+        printf("turtle_called\t");
+
+        pthread_mutex_lock(&lock_flag);
+        flag = 3;                                      //seting flag = 3, to tell reporter that turtle is called
+        pthread_mutex_unlock(&lock_flag);
+
+        
     }
     return NULL;
 }
@@ -163,18 +152,14 @@ void *turtle_function(void* argv)
 void *reporter_function(void* argv)
 {
     while(hare < finish && turtle < finish){
-        if(god_flag !=1 || hare_flag !=1 || turtle_flag !=1) continue;                      //skip all if not god_flag = 1 and hare_flag = 1 and turtle_flag = 1
-
-        // if((hare < finish && turtle < finish)!=1)   break;
+        if(flag !=1) continue;
 
         printf("Hare: %d, Turtle: %d\n", hare,turtle);         //print hare and turtle position
 
-        /*reseting all flags onces reporter called*/     
-        pthread_mutex_lock(&lock); 
-        god_flag = 0;
-        hare_flag = 0;
-        turtle_flag = 0;
-        pthread_mutex_unlock(&lock);
+        pthread_mutex_lock(&lock_flag);
+        flag = 0;                                      //seting flag = 0 again, to tell god that reporter is called
+        pthread_mutex_unlock(&lock_flag);
+
     }
     return NULL;
     
