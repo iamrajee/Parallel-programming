@@ -12,3 +12,4 @@ run:
 	g++ compute_mutex_simple.cpp -o compute_mutex_simple -lpthread
 	g++ compute_mutex_overhead.cpp -o compute_mutex_overhead -lpthread
 	./reportbash.sh
+	python show_graph.py
