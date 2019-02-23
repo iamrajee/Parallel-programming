@@ -1,5 +1,5 @@
 SHELL=/bin/bash
-i = 1000000			#act as default value if no values passed to make
+i = 1000000#act as default value if no values passed to make
 n = 4
 all:
 	make clean
@@ -11,5 +11,5 @@ run:
 	g++ compute_busywait.cpp -o compute_busywait -lpthread
 	g++ compute_mutex.cpp -o compute_mutex -lpthread
 	g++ compute_mutex_overhead.cpp -o compute_mutex_overhead -lpthread
-	# ./compute_mutex $(i) $(n)
-	./bash.sh $(i) $(n)
+	# ./bash.sh $(i) $(n)
+	./reportbash.sh

@@ -1,0 +1,148 @@
+
+iters: 10 1
+Execution time: 0.000124 s
+
+iters: 10 2
+Execution time: 0.000206 s
+
+iters: 10 4
+Execution time: 0.000272 s
+
+iters: 10 10
+Execution time: 0.000521 s
+
+iters: 10 20
+Execution time: 0.000931 s
+
+iters: 10 50
+Execution time: 0.002368 s
+
+iters: 10 100
+Execution time: 0.004387 s
+
+iters: 100 1
+Execution time: 8.1e-05 s
+
+iters: 100 2
+Execution time: 0.000127 s
+
+iters: 100 4
+Execution time: 0.000287 s
+
+iters: 100 10
+Execution time: 0.000575 s
+
+iters: 100 20
+Execution time: 0.000952 s
+
+iters: 100 50
+Execution time: 0.002201 s
+
+iters: 100 100
+Execution time: 0.004687 s
+
+iters: 1000 1
+Execution time: 0.000177 s
+
+iters: 1000 2
+Execution time: 0.000231 s
+
+iters: 1000 4
+Execution time: 0.000286 s
+
+iters: 1000 10
+Execution time: 0.000674 s
+
+iters: 1000 20
+Execution time: 0.00125 s
+
+iters: 1000 50
+Execution time: 0.003251 s
+
+iters: 1000 100
+Execution time: 0.006163 s
+
+iters: 10000 1
+Execution time: 0.000274 s
+
+iters: 10000 2
+Execution time: 0.000549 s
+
+iters: 10000 4
+Execution time: 0.000387 s
+
+iters: 10000 10
+Execution time: 0.000705 s
+
+iters: 10000 20
+Execution time: 0.001496 s
+
+iters: 10000 50
+Execution time: 0.003684 s
+
+iters: 10000 100
+Execution time: 0.005684 s
+
+iters: 100000 1
+Execution time: 0.000989 s
+
+iters: 100000 2
+Execution time: 0.001475 s
+
+iters: 100000 4
+Execution time: 0.001779 s
+
+iters: 100000 10
+Execution time: 0.002773 s
+
+iters: 100000 20
+Execution time: 0.003642 s
+
+iters: 100000 50
+Execution time: 0.004518 s
+
+iters: 100000 100
+Execution time: 0.008077 s
+
+iters: 1000000 1
+Execution time: 0.010468 s
+
+iters: 1000000 2
+Execution time: 0.015447 s
+
+iters: 1000000 4
+Execution time: 0.013409 s
+
+iters: 1000000 10
+Execution time: 0.013585 s
+
+iters: 1000000 20
+Execution time: 0.013701 s
+
+iters: 1000000 50
+Execution time: 0.017449 s
+
+iters: 1000000 100
+Execution time: 0.018119 s
+
+iters: 10000000 1
+Execution time: 0.08098 s
+
+iters: 10000000 2
+Execution time: 0.083158 s
+
+iters: 10000000 4
+Execution time: 0.149106 s
+
+iters: 10000000 10
+Execution time: 0.152582 s
+
+iters: 10000000 20
+Execution time: 0.157378 s
+
+iters: 10000000 50
+Execution time: 0.138405 s
+
+iters: 10000000 100
+Execution time: 0.157818 s
+
