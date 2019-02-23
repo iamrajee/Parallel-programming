@@ -5,11 +5,10 @@ all:
 	make clean
 	make run
 clean:
-	rm -f compute_mutex compute compute_busywait 
+	rm -f compute_simple compute_busywait compute_mutex_simple compute_mutex_overhead
 run:
-	g++ compute.cpp -o compute -lpthread
+	g++ compute_simple.cpp -o compute_simple -lpthread
 	g++ compute_busywait.cpp -o compute_busywait -lpthread
-	g++ compute_mutex.cpp -o compute_mutex -lpthread
+	g++ compute_mutex_simple.cpp -o compute_mutex_simple -lpthread
 	g++ compute_mutex_overhead.cpp -o compute_mutex_overhead -lpthread
-	# ./bash.sh $(i) $(n)
 	./reportbash.sh
