@@ -17,7 +17,7 @@ long long iters = 0;
 long long NUM_THREADS = 0;
 void *compute(void *rank);
 int flag = 0;
-pthread_mutex_t lock;
+pthread_rwlock_t lock;
 int main(int argc, char* argv[]) 
 {
     long thread;
@@ -67,9 +67,9 @@ void *compute(void *rank)
         factor = -1.0 * factor;
     }
     
-    pthread_mutex_lock(&lock);
+    pthread_rwlock_wrlock(&lock);
     sum += my_sum;
-    pthread_mutex_unlock(&lock);
+    pthread_rwlock_unlock(&lock);
 
     return NULL;
 }

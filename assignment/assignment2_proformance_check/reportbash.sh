@@ -1,37 +1,75 @@
 echo ""
-echo "--------------------------------------------------------------------------"
-echo -n "Making reports..."
-iter_list=(10 100 1000 10000 100000 1000000 10000000)
-thread_list=(1 2 4 10 20 50 100)
+echo "================================================================================"
+echo "|"
+echo -n "|                  1) Making reports..."
 
-echo -n "" > report/simple/simple.txt
-echo -n "" > report/busywait/busywait.txt
-echo -n "" > report/mutex_simple/mutex_simple.txt
-echo -n "" > report/mutex_overhead/mutex_overhead.txt
+#define your parameter here
+iter_list=(10 100 1000 10000 100000 1000000 10000000)
+thread_list=(1 2 4 6 8 10)
+reportlist=(busywait mutex_simple mutex_overhead barrier_busywait_and_mutex barrier_condvar barrier_sem rwlock)
+repeat=5 #How many times should i run one method and then took avg
+
+
+#---------------for serial computation-------------------------#
+q=serial
+for i in ${iter_list[*]}
+do
+	echo -n "" >> report/${q}/${q}.txt
+	echo -n "iters, NUM_THREAD, (value, Execution time) repetaion times pairs = [" ${i} ", 1">> report/${q}/${q}.txt
+	COUNTER=0
+	while [  $COUNTER -lt ${repeat} ];
+	do
+		./compute_${q}.out ${i} 1 >> report/${q}/${q}.txt #since no of thread passed is = 1. Hence serial
+		let COUNTER=COUNTER+1
+	done
+	echo -e "]" >> report/${q}/${q}.txt
+done
+# echo "" >> report/${q}/${q}.txt
+
+
+
+#---------------for parallel computation-------------------------#
+for p in ${reportlist[*]}
+do
+	echo -n "" > report/${p}/${p}.txt
+done
 
 for i in ${iter_list[*]}
 do
 	for n in ${thread_list[*]}
 	do
-		echo -n "iters, NUM_THREAD, value, Execution time = [" ${i} ", " ${n} ", ">> report/simple/simple.txt
-		echo -n "iters, NUM_THREAD, value, Execution time = [" ${i} ", " ${n} ", ">> report/busywait/busywait.txt
-        echo -n "iters, NUM_THREAD, value, Execution time = [" ${i} ", " ${n} ", ">> report/mutex_simple/mutex_simple.txt
-		echo -n "iters, NUM_THREAD, value, Execution time = [" ${i} ", " ${n} ", ">> report/mutex_overhead/mutex_overhead.txt
-		./compute_mutex_simple ${i} ${n} >> report/simple/simple.txt
-		./compute_mutex_overhead ${i} ${n} >> report/busywait/busywait.txt
-		./compute_mutex_simple ${i} ${n} >> report/mutex_simple/mutex_simple.txt
-		./compute_mutex_overhead ${i} ${n} >> report/mutex_overhead/mutex_overhead.txt
+		for p in ${reportlist[*]}
+		do
+			echo -n "" >> report/${p}/${p}.txt
+			echo -n "iters, NUM_THREAD, (value, Execution time) repetaion times pairs = [" ${i} ", " ${n}>> report/${p}/${p}.txt
+			COUNTER=0
+			while [  $COUNTER -lt ${repeat} ];
+			do
+				./compute_${p}.out ${i} ${n} >> report/${p}/${p}.txt
+				let COUNTER=COUNTER+1
+			done
+			echo -e "]" >> report/${p}/${p}.txt
+		done
     done
 	echo -n "."
 done
-echo ""
-echo "Report successfully create in /report folder"
-echo "Creating graph wait..."
-python show_graph.py report/simple/simple.txt
-python show_graph.py report/busywait/busywait.txt
-python show_graph.py report/mutex_simple/mutex_simple.txt
-python show_graph.py report/mutex_overhead/mutex_overhead.txt
-echo "Graph successfully create in /report folder"
 
-echo "--------------------------------------------------------------------------"
+echo ""
+echo "|                     > Report successfully create in /report folder"
+echo -n "|                  2) Creating graph wait..."
+
+reportlist=(serial busywait mutex_simple mutex_overhead barrier_busywait_and_mutex barrier_condvar barrier_sem rwlock)
+#---------------for both serial and parallel computation-------------------------#
+for p in ${reportlist[*]}
+do
+	python show_graph.py report/${p}/${p}.txt
+	echo -n "."
+done
+python2 compare_various_method.py report/${q}/${q}.txt
+echo ""
+echo "|                     > Graph successfully create in /report folder"
+lscpu > report/Hardware_specification.txt
+echo "|                  3) Created Hardware_specification in /report folder"
+echo "|"
+echo "================================================================================"
 echo ""

@@ -15,9 +15,12 @@ clock_t tStart = clock(); //starting clock
 double sum = 0;
 long long iters = 0;
 long long NUM_THREADS = 0;
+long long counter = 0;
 void *compute(void *rank);
-int flag = 0;
-pthread_mutex_t lock;
+
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER; 
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
 int main(int argc, char* argv[]) 
 {
     long thread;
@@ -33,8 +36,7 @@ int main(int argc, char* argv[])
     handles = (pthread_t*) malloc(NUM_THREADS * sizeof(pthread_t));
     
     for(thread = 0; thread < NUM_THREADS; thread++)  {
-        pthread_create(&handles[thread], NULL, 
-            compute, (void*) thread);
+        pthread_create(&handles[thread], NULL, compute, (void*) thread);
     }
     
     for(thread = 0; thread < NUM_THREADS; thread++)  {
@@ -43,7 +45,7 @@ int main(int argc, char* argv[])
     free(handles);
     
     val = 4.0 * sum;
-    cout << ", "<< val << ", " << (double)(clock() - tStart)/CLOCKS_PER_SEC;
+	cout << ", "<< val << ", " << (double)(clock() - tStart)/CLOCKS_PER_SEC;
     return 0;
 }
 
@@ -67,9 +69,15 @@ void *compute(void *rank)
         factor = -1.0 * factor;
     }
     
-    pthread_mutex_lock(&lock);
+    pthread_mutex_lock(&mutex);
     sum += my_sum;
-    pthread_mutex_unlock(&lock);
-
+    counter++;
+    if(counter < NUM_THREADS){
+            pthread_cond_wait(&cond, &mutex); 
+    }
+    else{
+        pthread_cond_broadcast(&cond);
+    }
+    pthread_mutex_unlock(&mutex);
     return NULL;
 }

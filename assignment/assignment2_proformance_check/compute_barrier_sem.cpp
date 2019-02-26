@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 #include <errno.h>
-
+#include <semaphore.h>
 using namespace std;
 
 
@@ -15,9 +15,17 @@ clock_t tStart = clock(); //starting clock
 double sum = 0;
 long long iters = 0;
 long long NUM_THREADS = 0;
+long long counter = 0;
 void *compute(void *rank);
-int flag = 0;
-pthread_mutex_t lock;
+
+sem_t count_sem;
+sem_t barrier_sem;
+int pshared = 0;
+int value1 = 1;
+int value2 = 0;
+int ret1 = sem_init(&count_sem, pshared, value1);
+int ret2 = sem_init(&barrier_sem, pshared, value2);
+
 int main(int argc, char* argv[]) 
 {
     long thread;
@@ -31,7 +39,7 @@ int main(int argc, char* argv[])
     double val = 0.0;
     
     handles = (pthread_t*) malloc(NUM_THREADS * sizeof(pthread_t));
-    
+
     for(thread = 0; thread < NUM_THREADS; thread++)  {
         pthread_create(&handles[thread], NULL, 
             compute, (void*) thread);
@@ -43,7 +51,7 @@ int main(int argc, char* argv[])
     free(handles);
     
     val = 4.0 * sum;
-    cout << ", "<< val << ", " << (double)(clock() - tStart)/CLOCKS_PER_SEC;
+	cout << ", "<< val << ", " << (double)(clock() - tStart)/CLOCKS_PER_SEC;
     return 0;
 }
 
@@ -66,10 +74,23 @@ void *compute(void *rank)
         my_sum += factor/(double) (2*i+1);
         factor = -1.0 * factor;
     }
-    
-    pthread_mutex_lock(&lock);
-    sum += my_sum;
-    pthread_mutex_unlock(&lock);
+
+    // Barrier
+    sem_wait (&count_sem);
+    if (counter == NUM_THREADS - 1) {
+        counter++;
+        sum+=my_sum;
+        sem_post (&count_sem);
+        for (i = 0; i < NUM_THREADS - 1; i++) {
+            sem_post (&barrier_sem);
+        }
+    }
+    else {
+        counter++;
+        sum+=my_sum;
+        sem_post (&count_sem);
+        sem_wait (&barrier_sem);
+    }
 
     return NULL;
 }

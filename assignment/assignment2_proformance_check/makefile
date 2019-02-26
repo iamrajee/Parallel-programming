@@ -1,20 +1,12 @@
 SHELL=/bin/bash
+reportlist=serial busywait mutex_simple mutex_overhead barrier_busywait_and_mutex barrier_condvar barrier_sem rwlock
 all:
 	make clean
 	make run
 clean:
-	rm -f compute_simple compute_busywait compute_mutex_simple compute_mutex_overhead
-	rm -f report/simple/*.png
-	rm -f report/simple/*.txt
-	rm -f report/busywait/*.png
-	rm -f report/busywait/*.txt
-	rm -f report/mutex_simple/*.png
-	rm -f report/mutex_simple/*.txt
-	rm -f report/mutex_overhead/*.png
-	rm -f report/mutex_overhead/*.txt
+	rm -f *.out
+	rm -f report/efficiency/*.png
+	$(foreach x,$(reportlist),rm -f report/$(x)/*.png rm -f report/$(x)/*.txt)
 run:
-	g++ compute_simple.cpp -o compute_simple -lpthread
-	g++ compute_busywait.cpp -o compute_busywait -lpthread
-	g++ compute_mutex_simple.cpp -o compute_mutex_simple -lpthread
-	g++ compute_mutex_overhead.cpp -o compute_mutex_overhead -lpthread
+	$(foreach x,$(reportlist),g++ compute_$(x).cpp -o compute_$(x).out -lpthread;)
 	./reportbash.sh
