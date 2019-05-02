@@ -1,3 +1,12 @@
+/*
+See also
+MPI_Ssend
+MPI_Isend
+MPI_Test
+MPI_Wait
+MPI_Sendrecv
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include<time.h>
@@ -37,12 +46,3 @@ int main(int argc, char* argv[]) {
     //printf("\n%f",(double)(clock() - tStart)/CLOCKS_PER_SEC);
     return 0;
 }
-
-/*
-See also
-MPI_Ssend
-MPI_Isend
-MPI_Test
-MPI_Wait
-MPI_Sendrecv
-*/

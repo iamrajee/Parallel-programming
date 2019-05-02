@@ -1,0 +1,73 @@
+{
+	"folders": [
+		{
+			"path": "/home/rajendra/catkin_ws"
+		},
+		{
+			"path": "/home/rajendra/111601017-compiler-lab"
+		},
+		{
+			"path": "/home/rajendra/Parallel-programming"
+		},
+		{
+			"path": "/home/rajendra/git/opencv"
+		},
+		{
+			"path": "/home/rajendra/bio_medical"
+		},
+		{
+			"path": "/home/rajendra/raspberrypi"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"cctype": "cpp",
+			"cmath": "cpp",
+			"cstdarg": "cpp",
+			"cstddef": "cpp",
+			"cstdlib": "cpp",
+			"cstring": "cpp",
+			"ctime": "cpp",
+			"cwchar": "cpp",
+			"atomic": "cpp",
+			"*.tcc": "cpp",
+			"chrono": "cpp",
+			"clocale": "cpp",
+			"cstdint": "cpp",
+			"cstdio": "cpp",
+			"cwctype": "cpp",
+			"exception": "cpp",
+			"initializer_list": "cpp",
+			"iosfwd": "cpp",
+			"iostream": "cpp",
+			"istream": "cpp",
+			"limits": "cpp",
+			"new": "cpp",
+			"ostream": "cpp",
+			"ratio": "cpp",
+			"stdexcept": "cpp",
+			"streambuf": "cpp",
+			"system_error": "cpp",
+			"thread": "cpp",
+			"cinttypes": "cpp",
+			"type_traits": "cpp",
+			"typeindex": "cpp",
+			"typeinfo": "cpp",
+			"algorithm": "cpp",
+			"array": "c",
+			"utility": "c",
+			"unordered_map": "cpp",
+			"vector": "cpp",
+			"fstream": "cpp",
+			"functional": "cpp",
+			"sstream": "cpp",
+			"tuple": "cpp"
+		},
+		"python.pythonPath": "/usr/bin/python",
+		"python.autoComplete.extraPaths": [
+			"/home/rajendra/catkin_ws/devel/lib/python2.7/dist-packages",
+			"/opt/ros/kinetic/lib/python2.7/dist-packages"
+		],
+		"ros.distro": "kinetic"
+	}
+}

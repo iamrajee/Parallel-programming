@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     printf("Process %d doing task2!\n",rank);    //random order
 
     MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+    //MPI_Comm_rank(MPI_COMM_WORLD,&rank);
     for ( int i = 0; i < size; ++i ) {  //enforces order allthough
     if ( rank == i ) {
         // my turn to write to terminal
